@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <sstream>
+#include <cstdlib>
+#include <ctime>
 #include "pixel.h"
 #include "pixel_func.h"
 
@@ -35,13 +38,13 @@ void flip_vertically(std::vector<Pixel*>& pixel_list)
 		if(pixel_list[i]->x != next)
 		{
 			max = i-1;
-			std::cout<<"Max index for where " <<next <<" is found is " <<max <<std::endl;
+	//		std::cout<<"Max index for where " <<next <<" is found is " <<max <<std::endl;
 			if((i-start) % 2 != 0)
 			{
 				half = ((max-start)/2)+start;	
 			}
 			half = ((i-start)/2)+start;
-			std::cout<<"half way index is " <<half <<std::endl;
+	//		std::cout<<"half way index is " <<half <<std::endl;
 			for(int j = 0;start<half;start++, j++)
 			{
 				p = *pixel_list[start];
@@ -56,15 +59,15 @@ void flip_vertically(std::vector<Pixel*>& pixel_list)
 		}
 		else if(i==(pixel_list.size()-1))
 		{
-			std::cout<<"start index is equal to: " <<start <<std::endl;
+	//		std::cout<<"start index is equal to: " <<start <<std::endl;
 			max = pixel_list.size();
-			std::cout<<"max index is equal to: " <<max <<std::endl;
+	//		std::cout<<"max index is equal to: " <<max <<std::endl;
 			if((max-start)%2!=0)
 			{
 				half = ((max-start-1)/2) +start;	
 			}
  			half =((max-start)/2)+start;
-			std::cout<<"half is equal to : " <<half <<std::endl;
+	//		std::cout<<"half is equal to : " <<half <<std::endl;
 			for(int j = 1;start<half;start++, j++)
 			{
 				p = *pixel_list[start];
@@ -79,15 +82,34 @@ void flip_vertically(std::vector<Pixel*>& pixel_list)
 		next = pixel_list[i]->x;
 	}	
 }
-/*
-void add_pixel(std::vector<Pixel> &pixel_list, int x, int y, float r, float g, float b)
+
+std::string makedata(int x, int y)
 {
-	Pixel *p = new Pixel;
-	p->x = x;
-	p->y = y;
-	p->r = r;
-	p->g = g;
-	p->b = b;
-	pixel_list.push_back(p);	
-	delete p;
-}*/
+	Pixel p1;
+	std::ostringstream ss;
+	
+	srand((unsigned) time(NULL));
+	for(int i = 0; i<x; i++)
+	{
+		for(int j = 0; j<y; j++)
+		{
+			p1.x = i;
+			p1.y = j;
+			p1.r = (float) rand()/ RAND_MAX;
+			p1.g = (float) rand()/RAND_MAX;
+			p1.b = (float) rand()/RAND_MAX;
+			ss <<p1.x <<"," <<p1.y <<"," <<p1.r <<"," <<p1.g <<"," <<p1.b <<std::endl;
+		}
+	}
+	return ss.str();
+}
+
+std::string outputdata(std::vector<Pixel*>& pixel_list)
+{
+	std::ostringstream os;
+	for(int i = 0; i<pixel_list.size();i++)
+	{
+		os <<pixel_list[i]->x <<"," <<pixel_list[i]->y <<"," <<pixel_list[i]->r <<"," <<pixel_list[i]->g <<"," <<pixel_list[i]->b <<std::endl;
+	}
+	return os.str();
+}
