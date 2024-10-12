@@ -7,6 +7,38 @@
 #include "pixel.h"
 #include "pixel_func.h"
 
+void add_pixel(std::string line, Pixel *p, std::vector<Pixel *> &pixel_list)
+{
+	int prev_find = 0;
+	int last_find = line.find(",");
+	int ct = 1;
+	while(last_find != std::string::npos)
+	{
+		std::string sub = line.substr(prev_find, last_find-prev_find);
+		switch(ct)
+		{
+			case 1:
+				p->x = std::stoi(sub);
+				break;
+			case 2:
+				p->y = std::stoi(sub);
+				break;
+			case 3:
+				p->r = std::stof(sub);
+				break;
+			case 4:
+				p->g = std::stof(sub);
+				break;
+		}
+		prev_find = last_find+1;
+		last_find = line.find(",",last_find+1);
+		sub = line.substr(prev_find, line.length()+1-prev_find);
+		p->b = std::stof(sub);
+		ct++;
+	}
+	pixel_list.push_back(p);	
+}
+
 void average_colors(std::vector<Pixel*>& pixel_list)
 {	
 	double r =0;
@@ -21,9 +53,11 @@ void average_colors(std::vector<Pixel*>& pixel_list)
 	double avg_r = r/(pixel_list.size());
 	double avg_g = g/(pixel_list.size());
 	double avg_b = b/(pixel_list.size());
+	std::cout<<"----------------" <<std::endl;
 	std::cout<<"Average r is: " <<avg_r <<std::endl;
 	std::cout<<"Average g is: " <<avg_g <<std::endl;
 	std::cout<<"Average b is: " <<avg_b <<std::endl;	
+	std::cout<<"----------------" <<std::endl;
 }
 
 void flip_vertically(std::vector<Pixel*>& pixel_list)
@@ -38,13 +72,11 @@ void flip_vertically(std::vector<Pixel*>& pixel_list)
 		if(pixel_list[i]->x != next)
 		{
 			max = i-1;
-	//		std::cout<<"Max index for where " <<next <<" is found is " <<max <<std::endl;
 			if((i-start) % 2 != 0)
 			{
 				half = ((max-start)/2)+start;	
 			}
 			half = ((i-start)/2)+start;
-	//		std::cout<<"half way index is " <<half <<std::endl;
 			for(int j = 0;start<half;start++, j++)
 			{
 				p = *pixel_list[start];
@@ -59,15 +91,12 @@ void flip_vertically(std::vector<Pixel*>& pixel_list)
 		}
 		else if(i==(pixel_list.size()-1))
 		{
-	//		std::cout<<"start index is equal to: " <<start <<std::endl;
 			max = pixel_list.size();
-	//		std::cout<<"max index is equal to: " <<max <<std::endl;
 			if((max-start)%2!=0)
 			{
 				half = ((max-start-1)/2) +start;	
 			}
  			half =((max-start)/2)+start;
-	//		std::cout<<"half is equal to : " <<half <<std::endl;
 			for(int j = 1;start<half;start++, j++)
 			{
 				p = *pixel_list[start];
